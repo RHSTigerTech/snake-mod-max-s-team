@@ -11,9 +11,9 @@ from pygame.locals import *
 # Global variables are used in this program.
 # The justification is that all of these global variables are actually CONSTANTS
 # so thier values should never change (preventing that difficult to trace bug)
-FPS = 15
-WINDOW_WIDTH = 600
-WINDOW_HEIGHT = 400
+
+WINDOW_WIDTH = 1200
+WINDOW_HEIGHT = 800
 CELL_SIZE = 20
 assert WINDOW_WIDTH % CELL_SIZE == 0,  "cell size must divide WINDOW_WIDTH"
 assert WINDOW_HEIGHT % CELL_SIZE == 0,  "cell size must divide WINDOW_HEIGHT"
@@ -38,6 +38,15 @@ X = 0
 Y = 1
 
 def main():
+    
+    fps = 30
+    difficulty =  input("What difficulty do you want ?\nImpossible\nNot Impossible\nEasy\n")
+    if difficulty[0].capitalize()=="I":
+        fps=60
+    if difficulty[0].capitalize()=="N":
+        fps=20
+    if difficulty[0].capitalize()=="E":
+        fps=5
     global FPS_CLOCK, DISPLAY_SURF, BASIC_FONT
     pygame.init()
     FPS_CLOCK = pygame.time.Clock()
@@ -46,7 +55,7 @@ def main():
     pygame.display.set_caption("sNaKe_ClOnE")
     showStartScreen()  # Not yet defined
     while True:
-        runGame()  # Not yet defined
+        runGame(fps)  # Not yet defined
         showGameOverScreen()  # Not yet defined
 
 
@@ -82,7 +91,10 @@ def drawSnake(snakeCoords):
         snakeBodySeg = pygame.Rect(segment[X]*CELL_SIZE+2, segment[Y]*CELL_SIZE+2, CELL_SIZE-4, CELL_SIZE-4)
         pygame.draw.rect(DISPLAY_SURF, DARKGREEN, snakeBodySeg)
 
-
+def drawScore(score):
+    goFont = pygame.font.Font('freesansbold.ttf', 30)
+    score = goFont.render("score: "+str(score), True, GREEN, BLACK)
+    DISPLAY_SURF.blit(score, (0,0))
 def showGameOverScreen():
     while True:
         goFont = pygame.font.Font('freesansbold.ttf', 100)
@@ -94,7 +106,7 @@ def showGameOverScreen():
         DISPLAY_SURF.blit(overText, (WINDOW_WIDTH/8, WINDOW_HEIGHT//2))
         DISPLAY_SURF.blit(playText, (WINDOW_WIDTH/10, WINDOW_HEIGHT-50))
         pygame.display.update()
-        time.sleep(1)
+        
         for event in pygame.event.get(): # event handling loop
             if event.type == QUIT:  
                 terminate()   # to be implemented pygame.quit() then sys.exit()
@@ -115,7 +127,8 @@ def getRandomLocation(snakeCoords):
         y = random.randint(0, CELL_HEIGHT-1)
     return (x, y)
 
-def runGame():
+def runGame(fps):
+    score=0
     startX = CELL_WIDTH // 2
     startY = CELL_HEIGHT // 2
     snakeCoords = [(startX, startY)]
@@ -164,6 +177,7 @@ def runGame():
             return  #gameover
         
         if snakeCoords[HEAD] == apple:
+            score += 1
             apple = getRandomLocation(snakeCoords)
         else:
             snakeCoords.pop()
@@ -175,10 +189,11 @@ def runGame():
         drawGrid()
         drawSnake(snakeCoords)
         drawApple(apple)
+        drawScore(score)
         # drawScore 
         
         pygame.display.update()
-        FPS_CLOCK.tick(FPS)
+        FPS_CLOCK.tick(fps)
 
 
 
