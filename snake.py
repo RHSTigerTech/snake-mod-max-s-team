@@ -134,9 +134,14 @@ def runGame(fps):
     snakeCoords = [(startX, startY)]
     direction = random.choice([RIGHT, LEFT, UP, DOWN])
     apple = getRandomLocation(snakeCoords)  # to be implemented
+    countdown = True
+    goFont = pygame.font.Font('freesansbold.ttf', 100)
     
     # Event handling loop
     while True: 
+
+        
+
         ## CHECK FOR USER INPUT ##
         for event in pygame.event.get(): # event handling loop
             if event.type == QUIT:  
@@ -193,7 +198,20 @@ def runGame(fps):
         # drawScore 
         
         pygame.display.update()
-        FPS_CLOCK.tick(fps)
+        FPS_CLOCK.tick(FPS)
+        
+
+        if countdown:
+            for i in range(3):
+                countdownText = goFont.render(str(3-i), True, RED, BLACK)
+                DISPLAY_SURF.blit(countdownText, (WINDOW_WIDTH/10, WINDOW_HEIGHT/10))
+                pygame.display.update()
+                time.sleep(1)
+            goVar = goFont.render("GO!", True, GREEN, BLACK)
+            DISPLAY_SURF.blit(goVar, (WINDOW_WIDTH/10, WINDOW_HEIGHT/10))
+            pygame.display.update()
+            time.sleep(1)
+        countdown = False
 
 
 
