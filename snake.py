@@ -55,8 +55,8 @@ def main():
     pygame.display.set_caption("sNaKe_ClOnE")
     showStartScreen()  # Not yet defined
     while True:
-        runGame(fps)  # Not yet defined
-        showGameOverScreen()  # Not yet defined
+        score = runGame(fps)  # Not yet defined
+        showGameOverScreen(score)  # Not yet defined
 
 
 def showStartScreen():
@@ -95,7 +95,7 @@ def drawScore(score):
     goFont = pygame.font.Font('freesansbold.ttf', 30)
     score = goFont.render("score: "+str(score), True, GREEN, BLACK)
     DISPLAY_SURF.blit(score, (0,0))
-def showGameOverScreen():
+def showGameOverScreen(score):
     while True:
         goFont = pygame.font.Font('freesansbold.ttf', 100)
         gameText = goFont.render("Game", True, GREEN, BLACK)
@@ -105,6 +105,9 @@ def showGameOverScreen():
         DISPLAY_SURF.blit(gameText, (WINDOW_WIDTH/10, WINDOW_HEIGHT//8))
         DISPLAY_SURF.blit(overText, (WINDOW_WIDTH/8, WINDOW_HEIGHT//2))
         DISPLAY_SURF.blit(playText, (WINDOW_WIDTH/10, WINDOW_HEIGHT-50))
+        goFont = pygame.font.Font('freesansbold.ttf', 30)
+        scoreText = goFont.render("score: "+str(score), True, GREEN, BLACK)
+        DISPLAY_SURF.blit(scoreText, (0,0))
         pygame.display.update()
         
         for event in pygame.event.get(): # event handling loop
@@ -175,11 +178,11 @@ def runGame(fps):
         snakeCoords.insert(0,newHead)
         # Check for collision
         if snakeCoords[HEAD][X] >= CELL_WIDTH or snakeCoords[HEAD][X] < 0:
-            return  #gameover
+            return score #gameover
         if snakeCoords[HEAD][Y] >= CELL_HEIGHT or snakeCoords[HEAD][Y] < 0:
-            return  #gameover
+            return score #gameover
         if snakeCoords[HEAD] in snakeCoords[1:]:
-            return  #gameover
+            return score #gameover
         
         if snakeCoords[HEAD] == apple:
             score += 1
@@ -212,6 +215,7 @@ def runGame(fps):
             pygame.display.update()
             time.sleep(1)
         countdown = False
+    
 
 
 
