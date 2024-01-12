@@ -198,7 +198,7 @@ def runGame(fps):
         # drawScore 
         
         pygame.display.update()
-        FPS_CLOCK.tick(FPS)
+        FPS_CLOCK.tick(fps)
         
 
         if countdown:
